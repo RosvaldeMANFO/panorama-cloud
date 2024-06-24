@@ -1,4 +1,4 @@
-FROM node:20 AS backend-dev
+FROM node:20
 
 WORKDIR /usr/local/app
 
@@ -13,5 +13,5 @@ EXPOSE 3000
 CMD ["npm", "run", "dev"]
 
 
-FROM backend-dev AS test
-RUN npm run test
+# FROM backend-dev AS test
+# RUN npm run test

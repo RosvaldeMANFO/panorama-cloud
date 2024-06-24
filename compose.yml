@@ -1,9 +1,7 @@
 version: '3'
 services:
   backend:
-    build:
-      context: backend
-      target: backend-dev
+    image: 127.0.0.1:5000/backend:todo-backend
     container_name: backend
     networks:
       - todo
@@ -19,8 +17,7 @@ services:
     restart: on-failure
 
   client:
-    build:
-      context: client
+    image: 127.0.0.1:5000/front:todo-client
     container_name: client
     networks:
       - todo
