@@ -4,6 +4,7 @@ secrets
 #Terraform
 aws/terraform/.terraform
 aws/terraform/.terraform.lock.hcl
+aws/terraform/terraform.tfstate
 
 # Logs
 logs
