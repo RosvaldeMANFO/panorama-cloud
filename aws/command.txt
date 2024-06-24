@@ -1,0 +1,11 @@
+docker container run -it -v ${PWD}/terraform:/app -w /app --rm hashicorp/terraform init
+
+docker container run -it -v ${PWD}/terraform:/app -w /app --rm hashicorp/terraform plan
+
+docker container run -it -v ${PWD}/terraform:/app -w /app --rm hashicorp/terraform apply
+
+docker container run -it -v ${PWD}/terraform:/app -w /app --rm hashicorp/terraform destroy
+
+
+
+docker container run --rm ansible:2.16 ansible-playbook -i inventory.ini playbook.yml

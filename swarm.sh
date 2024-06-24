@@ -33,15 +33,15 @@ join_swarm() {
 }
 
 multipass launch --name manager --mount .:/mnt/docker docker
-multipass launch  --name worker1 docker
-multipass launch  --name worker2 docker
+# multipass launch  --name worker1 docker
+# multipass launch  --name worker2 docker
 
 multipass exec manager -- docker swarm init
 multipass exec manager -- docker service create --name registry -p 5000:5000 registry
 multipass exec manager -- sudo sh /mnt/docker/images-builder.sh
 
-join_swarm "worker" "worker1"
-join_swarm "worker" "worker2"
+# join_swarm "worker" "worker1"
+# join_swarm "worker" "worker2"
 
 # multipass shell manager
 # docker stack deploy -c /mnt/docker/docker-compose.yml todo_app

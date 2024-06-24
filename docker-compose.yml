@@ -15,6 +15,10 @@ services:
     ports:
       - 3000:3000
     restart: on-failure
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
 
   client:
     image: 127.0.0.1:5000/client:todo-client
@@ -27,6 +31,10 @@ services:
       - 8080:80
     depends_on:
       - backend
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
 
   mysql:
     image: mysql:8.0
@@ -38,6 +46,10 @@ services:
     environment: 
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: todos
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
 
 volumes:
   todo-mysql-data:
