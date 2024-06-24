@@ -17,12 +17,12 @@ services:
     restart: on-failure
 
   client:
-    image: 127.0.0.1:5000/front:todo-client
+    image: 127.0.0.1:5000/client:todo-client
     container_name: client
     networks:
       - todo
     environment:
-      API_URL: http://localhost:3000/api/
+      API_URL: http://backend:3000/api/
     ports:
       - 8080:80
     depends_on:
@@ -44,5 +44,4 @@ volumes:
 
 networks:
   todo:
-    driver: bridge  
-    name: todo
+    driver: overlay

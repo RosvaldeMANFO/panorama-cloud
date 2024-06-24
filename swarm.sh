@@ -44,5 +44,5 @@ join_swarm "worker" "worker1"
 join_swarm "worker" "worker2"
 
 # multipass shell manager
-# docker stack deploy -c /mnt/docker/docker-compose.yml social_network
+# docker stack deploy -c /mnt/docker/docker-compose.yml todo_app
 # docker service scale todo_backend=2

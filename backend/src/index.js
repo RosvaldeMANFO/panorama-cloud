@@ -8,7 +8,7 @@ const updateItem = require('./routes/updateItem');
 const deleteItem = require('./routes/deleteItem');
 const cors = require('cors')
 
-app.use('*', cors(),)
+app.use('*', cors())
 app.use(express.json());
 app.use(express.static(__dirname + '/static'));
 
