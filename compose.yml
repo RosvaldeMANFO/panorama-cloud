@@ -1,0 +1,51 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: backend
+      target: backend-dev
+    container_name: backend
+    networks:
+      - todo
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+      MYSQL_DB: todos
+    depends_on:
+      - mysql
+    ports:
+      - 3000:3000
+    restart: on-failure
+
+  client:
+    build:
+      context: client
+    container_name: client
+    networks:
+      - todo
+    environment:
+      API_URL: http://localhost:3000/api/
+    ports:
+      - 8080:80
+    depends_on:
+      - backend
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    networks:
+      - todo
+    volumes:
+      - todo-mysql-data:/var/lib/mysql
+    environment: 
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: todos
+
+volumes:
+  todo-mysql-data:
+
+networks:
+  todo:
+    driver: bridge  
+    name: todo
