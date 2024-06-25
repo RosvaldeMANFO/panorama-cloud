@@ -1,10 +1,11 @@
 #secret
-secrets
+myKey.pem
 
 #Terraform
 aws/terraform/.terraform
 aws/terraform/.terraform.lock.hcl
 aws/terraform/terraform.tfstate
+aws/terraform/terraform.tfstate.backup
 
 # Logs
 logs

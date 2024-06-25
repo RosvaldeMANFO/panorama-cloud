@@ -1,6 +1,6 @@
 ---
 - name: Setup and configure the EC2 instance
-  hosts: web
+  hosts: tag_Name_HTTP
   become: yes
   tasks:
     - name: Update and upgrade apt packages
