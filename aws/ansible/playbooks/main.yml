@@ -1,0 +1,72 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install required system packages
+      apt:
+        name: "{{ packages }}"
+        state: present
+        update_cache: yes
+      vars:
+        packages:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+
+    - name: Add Docker’s official GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Set up the stable repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt:
+        name: docker-ce
+        state: latest
+        update_cache: yes
+
+- hosts: tag_Name_HTTP
+  become: yes
+  tasks:
+    - name: Leave any existing Docker swarm
+      shell: docker swarm leave --force
+      ignore_errors: yes
+
+    - name: Initialize the Docker Swarm manager
+      shell: docker swarm init --advertise-addr {{ ansible_default_ipv4.address }}
+      register: swarm_init
+
+    - name: Get manager token
+      shell: docker swarm join-token -q worker
+      register: worker_token
+      when: swarm_init.changed
+
+- hosts: tag_Name_API, tag_Name_DATA
+  become: yes
+  tasks:
+    - name: Join the swarm cluster as workers
+      shell: "docker swarm join --token {{ hostvars['tag_Name_HTTP'][0].worker_token.stdout }} {{ hostvars['tag_Name_HTTP'][0].ansible_default_ipv4.address }}:2377"
+      when: hostvars['tag_Name_HTTP'][0].worker_token.stdout is defined
+
+- hosts: tag_Name_HTTP 
+  become: yes
+  tasks:
+    - name: Copy app directory to the remote host
+      copy:
+        src: /playbooks/app
+        dest: /home/ubuntu
+        mode: '7777'
+        owner: ubuntu
+        group: ubuntu
+
+    - name: Deploy Docker stack
+      shell: cd /home/ubuntu/app && docker stack deploy -c docker-compose.yml app
+
+

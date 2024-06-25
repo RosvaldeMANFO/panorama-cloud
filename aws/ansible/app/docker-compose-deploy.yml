@@ -1,9 +1,8 @@
 version: '3'
+
 services:
   backend:
-    build:
-      context: backend
-      target: backend-dev
+    image: 127.0.0.1:5000/backend:todo-backend
     container_name: backend
     networks:
       - todo
@@ -17,19 +16,30 @@ services:
     ports:
       - 3000:3000
     restart: on-failure
+    deploy:
+      replicas: 2
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.type == api
 
   client:
-    build:
-      context: client
+    image: 127.0.0.1:5000/client:todo-client
     container_name: client
     networks:
       - todo
     environment:
-      API_URL: http://localhost:3000/api/
+      API_URL: http://backend:3000/api/
     ports:
       - 8080:80
     depends_on:
       - backend
+    deploy:
+      replicas: 2
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.type == http
 
   mysql:
     image: mysql:8.0
@@ -41,11 +51,16 @@ services:
     environment: 
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: todos
+    deploy:
+      replicas: 2
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.type == data
 
 volumes:
   todo-mysql-data:
 
 networks:
   todo:
-    driver: bridge  
-    name: todo
+    driver: overlay
