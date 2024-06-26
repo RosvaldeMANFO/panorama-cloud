@@ -24,9 +24,8 @@ En raison d'insufisance matériel nous n'avons pas pu effectuer les test du dép
 
 ## Etapes d'execution
 - Situer dans la region ` us-east-1` sur aws 
-- Créer un fichier myKey.pem et le placer à la racine du repertoire ansible 
-- Ajouter les valeurs du `access_key` et du `secret_key` de compote aws dans les `fichiers aws/ansible/aws_ec2.yml`
-- Sauvegardez le `access_key` et le `secret_key` dans un fichier text , car ils vous seront également demandé lors de la crétion des instances
+- Créer un fichier myKey.pem et le placer à la racine du repertoire `ansible` 
+- Ajouter un fichier `.env` dans les répertoires `ansible` et `terrafome` contenant l' ACCESS_KEY et la SECRET_KEY de votre compte AWS au format `clé=valeur`. Vous trouverez un template à utiliser dans les répertoires.
 - Lancer le script `start.sh`situé à racine, afin de créer les instance et par la suite déployer l'aplication sur les instances crées
     
      - Il se pourrait que le `script start.sh`  ne fonctionne pas. Dans cas nous vous recommandons de: 

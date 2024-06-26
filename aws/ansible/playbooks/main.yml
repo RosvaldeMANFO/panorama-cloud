@@ -55,6 +55,35 @@
       shell: "docker swarm join --token {{ hostvars['tag_Name_HTTP'][0].worker_token.stdout }} {{ hostvars['tag_Name_HTTP'][0].ansible_default_ipv4.address }}:2377"
       when: hostvars['tag_Name_HTTP'][0].worker_token.stdout is defined
 
+- hosts: HTTP
+  become: yes
+  tasks:
+    - name: List all nodes
+      shell: docker node ls --format '{{ "{{.ID}}" }} {{ "{{.Hostname}}" }}'
+      register: docker_nodes
+
+    - name: Set Docker Swarm node labels
+      command: >
+        docker node update --label-add role={{ item.value }} {{ item.key }}
+      with_items: "{{ docker_nodes.stdout_lines | map('split', ' ') | map('last') | map('extract_hostname_label', groups) }}"
+      vars:
+        extract_hostname_label: >
+          {% filter from_yaml %}
+          {% for host in item %}
+          {{ host }}:
+            {% if host in groups['tag_Name_HTTP'] %}
+            value: http_server
+            {% elif host in groups['tag_Name_API'] %}
+            value: api_server
+            {% elif host in groups['tag_Name_DATA'] %}
+            value: data_server
+            {% else %}
+            value: unknown
+            {% endif %}
+          {% endfor %}
+          {% endfilter %}
+      when: item.value != 'unknown'
+
 - hosts: tag_Name_HTTP 
   become: yes
   tasks:
@@ -65,8 +94,7 @@
         mode: '7777'
         owner: ubuntu
         group: ubuntu
-
     - name: Deploy Docker stack
-      shell: cd /home/ubuntu/app && docker stack deploy -c docker-compose.yml app
+      shell: cd /home/ubuntu/app && sh deploy.sh
 
 
