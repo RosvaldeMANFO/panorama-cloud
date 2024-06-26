@@ -21,7 +21,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.type == api
+          - node.labels.role == api_server
 
   client:
     image: 127.0.0.1:5000/client:todo-client
@@ -38,8 +38,8 @@ services:
       replicas: 2
       placement:
         constraints:
-          - node.role == worker
-          - node.labels.type == http
+          - node.role == manager
+          - node.labels.role == http_server
 
   mysql:
     image: mysql:8.0
@@ -56,7 +56,7 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.labels.type == data
+          - node.labels.role == data_server
 
 volumes:
   todo-mysql-data:

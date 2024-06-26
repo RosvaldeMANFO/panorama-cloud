@@ -1,7 +1,7 @@
 provider "aws" {
   region     = var.region
-  access_key = var.aws_access_key
-  secret_key = var.aws_secret_key
+  access_key = local.aws_access_key
+  secret_key = local.aws_secret_key
 }
  
 resource "aws_instance" "http_instance" {
